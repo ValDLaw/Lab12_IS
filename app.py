@@ -7,7 +7,7 @@ import csv
 # el DNI debe ser valido (8 digitos)
 class CalculaGanador:
 
-    def leervotos(self):
+    def leer_votos(self):
         votos = []
         with open('0204.csv', 'r') as csvfile:
             next(csvfile)
@@ -15,18 +15,30 @@ class CalculaGanador:
             for voto in lectorvotos:
                 votos.append( voto)
         return votos
+    
+    def calcular_ganador(self, data):
+        votosxcandidato = self.contar_votos(data)
+        self.mostrar_ganador(votosxcandidato)
+        ganador = self.obtener_ganador(votosxcandidato)
+        print(ganador)
 
-    def calcularganador(self, data):
+    def contar_votos(self, data):
         votosxcandidato = {}
         for fila in data:
-            if not fila[4] in votosxcandidato:
-                votosxcandidato[fila[4]] = 0
+            candidato = fila[4]
+            if candidato not in votosxcandidato:
+                votosxcandidato[candidato] = 0
             if fila[5] == '1':
-                votosxcandidato[fila[4]] = votosxcandidato[fila[4]] + 1
-        for candidato in votosxcandidato:
-            print('candidato: ' + candidato + ' votos validos: ' + str(votosxcandidato[candidato]))
-        for candidato in votosxcandidato:
-            return [candidato]
+                votosxcandidato[candidato] += 1
+        return votosxcandidato
+
+    def mostrar_ganador(self, votosxcandidato):
+        for candidato, votos in votosxcandidato.items():
+            print('Candidato: ' + candidato + ', Votos válidos: ' + str(votos))
+
+    def obtener_ganador(self, votosxcandidato):
+        ganador = max(votosxcandidato, key=votosxcandidato.get)
+        return [ganador]
 
 c = CalculaGanador()
 #c.calcularvotos(c.leerdatos())
@@ -36,9 +48,9 @@ datatest = [
 ['Áncash', 'Asunción', 'Acochaca', '86777322', 'Aundrea Grace', '1'],
 ['Áncash', 'Asunción', 'Acochaca', '23017965', 'Aundrea Grace', '1']
 ]
-print(c.calcularganador(datatest))
+print(c.calcular_ganador(datatest))
 
-
+'''
 class CalculaGanador:
 
     def leerdatos(self, archivo):
@@ -82,3 +94,4 @@ c.mostrar_ganador(votosxcandidato)
 # Obtener el ganador
 ganador = c.obtener_ganador(votosxcandidato)
 print(ganador)
+'''
