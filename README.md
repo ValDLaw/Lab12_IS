@@ -1,6 +1,10 @@
 # LAB 12
 ## Integrantes
-- Valeria Nicole Espinoza Tarazona - (202110109)
+- Valeria Nicole Espinoza Tarazona (202110109)
+- Hector Valentín Quezada Amour (202120750)
+- Enzo Gabriel Camizan Vidal (202110047)
+- Paolo Vásquez Grahammer (202110379)
+- Sofía Valeria García Quintana (202110567)
 
 ## Tipos de refactorización
 
