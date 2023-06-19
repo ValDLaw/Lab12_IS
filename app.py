@@ -36,9 +36,7 @@ class CalculaGanador:
             candidato = fila[4]
             if candidato not in votosxcandidato:
                 votosxcandidato[candidato] = 0
-            if len(fila[3]) != 8:
-                continue
-            if fila[5] == '1':
+            if fila[5] == '1' and len(fila[3]) == 8:
                 votosxcandidato[candidato] += 1
                 total_votos += 1
         return votosxcandidato, total_votos
