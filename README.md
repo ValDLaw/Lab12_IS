@@ -37,6 +37,19 @@ def obtener_ganadores(self, votosxcandidato):
         return candidatos_2vuelta
 ```  
 
+### Error 3  
+No se está realizando la siguiente validación:
+> El DNI debe ser valido (8 digitos) 
+
+Para ello, a la función *contar_votos*, le añadiremos la siguiente condicional:  
+
+```python
+if len(fila[3]) != 8:
+    continue
+```  
+
+Ello valida que si la longitud no es 8, no se contabiliza el voto
+
 Se agregó el método *obtener_ganadores* para poder extraer aquellos dos candidatos con más votos y devolver el que tiene mayor aceptación o el que aparece primero en el archivo.  
 ## Tipos de refactorización  
 
@@ -138,3 +151,39 @@ sorted_candidatos = sorted(votosxcandidato.items(), key=lambda x: x[1], reverse=
 ```  
 
 Calculamos únicamente lo que nos piden, que es en caso haya segunda vuelta, el que haya aperecido primero en el archivo, y lo almaceno en variables.
+
+### Simplificación de condicionales
+Nuestra función contar_votos tenía los siguientes ifs:  
+
+```python
+def contar_votos(self, data):
+        votosxcandidato = {}
+        total_votos = 0
+        for fila in data:
+            candidato = fila[4]
+            if candidato not in votosxcandidato:
+                votosxcandidato[candidato] = 0
+            if len(fila[3]) != 8:
+                continue
+            if fila[5] == '1':
+                votosxcandidato[candidato] += 1
+                total_votos += 1
+        return votosxcandidato, total_votos
+```  
+
+Para reducir la cantidad de ifs, realizamos la siguiente modificación:  
+```python
+def contar_votos(self, data):
+        votosxcandidato = {}
+        total_votos = 0
+        for fila in data:
+            candidato = fila[4]
+            if candidato not in votosxcandidato:
+                votosxcandidato[candidato] = 0
+            if fila[5] == '1' and len(fila[3]) != 8:
+                votosxcandidato[candidato] += 1
+                total_votos += 1
+        return votosxcandidato, total_votos
+```  
+
+De esta manera la validación de que el DNI y el voto sean válidos se hace en la misma línea.
