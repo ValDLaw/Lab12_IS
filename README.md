@@ -78,6 +78,36 @@ def leervotos(self):
         return votos
 ```
 
+De igual manera, nuestro previo era de esta manera:  
+```python 
+def calcularganador(self, data):
+        votosxcandidato = {}
+        for fila in data:
+            if not fila[4] in votosxcandidato:
+                votosxcandidato[fila[4]] = 0
+            if fila[5] == '1':
+                votosxcandidato[fila[4]] = votosxcandidato[fila[4]] + 1
+        for candidato in votosxcandidato:
+            print('candidato: ' + candidato + ' votos validos: ' + str(votosxcandidato[candidato]))
+        for candidato in votosxcandidato:
+```
+
+Y modificamos la variable fila para que haya una mejor comprensión; así como añadimos print de prueba:   
+```python
+def calcular_ganador(self, data):
+        votosxcandidato, total_votos = self.contar_votos(data)
+        ganador = self.obtener_ganador(votosxcandidato, total_votos)
+        if ganador:
+            print('GANADOR')
+            print('Candidato: ' + ganador[0])
+        else:
+            candidatos_2vuelta = self.obtener_ganadores(votosxcandidato)
+            print('Candidato: ' + candidatos_2vuelta[0][0] + ', Votos válidos: ' + str(candidatos_2vuelta[0][1]))
+            print('Candidato: ' + candidatos_2vuelta[1][0] + ', Votos válidos: ' + str(candidatos_2vuelta[1][1]))
+            print('GANADOR')
+            print('Candidato: ' + candidatos_2vuelta[0][0])
+```
+
 ### Extracción de métodos  
 Teníamos el siguiente código previamente:  
 ```python 
