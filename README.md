@@ -1,14 +1,47 @@
 # LAB 12
 ## Integrantes
-- Valeria Nicole Espinoza Tarazona (202110109)
-- Hector Valentín Quezada Amour (202120750)
-- Enzo Gabriel Camizan Vidal (202110047)
-- Paolo Vásquez Grahammer (202110379)
-- Sofía Valeria García Quintana (202110567)
+- Valeria Nicole Espinoza Tarazona - (202110109)
+- Hector Valentín Quezada Amour - (202120750)
+- Enzo Gabriel Camizan Vidal - (202110047)
+- Paolo Vásquez Grahammer - (202110379)
+- Sofía Valeria García Quintana - (202110567)
 
-## Tipos de refactorización
+## Detección de errores
+Antes que nada, hicimos un análisis de nuestro código para garantizar que se cumple con los requerimientos pedidos. Es así que identificamos lo siguientes errores de lógica al momento de devolver el ganador:  
 
-### * Renombrar variables o métodos  
+### Error 1  
+No se está realizando la siguiente validación:
+> Si hay un candidato con >50% de votos válidos retornar un array con un string con el nombre del ganador.
+
+Para ello, añadiremos la siguiente función:  
+```python
+def obtener_ganador(self, votosxcandidato, total_votos):
+        for candidato, votos in votosxcandidato.items():
+            porcentaje = (votos / total_votos) * 100
+            if porcentaje > 50:
+                return [candidato]
+        return None
+```
+
+En el método *obtener_ganador*, se calcula el porcentaje de votos para cada candidato y se verifica si supera el 50%
+
+### Error 2  
+No se está realizando la siguiente validación:
+> Si no hay un candidato que cumpla la condicion anterior, retornar un array con los dos candidatos que pasan a segunda vuelta.  Si ambos empatan con 50% de los votos se retorna el que apareció primero en el archivo.  
+
+Para ello, añadiremos la siguiente función:  
+```python
+def obtener_ganadores(self, votosxcandidato):
+        sorted_candidatos = sorted(votosxcandidato.items(), key=lambda x: x[1], reverse=True)
+        candidatos_2vuelta = [sorted_candidatos[0],sorted_candidatos[1]]
+        return candidatos_2vuelta
+```  
+
+Se agregó el método *obtener_ganadores* para poder extraer aquellos dos candidatos con más votos y devolver el que tiene mayor aceptación o el que aparece primero en el archivo.  
+## Tipos de refactorización  
+
+Para mejorar nuestro código sin cambiar su funcionalidad, empleamos los siguientes cambios:  
+### Renombrar variables o métodos  
 Teníamos el siguiente código previamente:  
 ```python
 def leerdatos(self, archivo):
@@ -32,7 +65,7 @@ def leervotos(self):
         return votos
 ```
 
-### * Extracción de métodos  
+### Extracción de métodos  
 Teníamos el siguiente código previamente:  
 ```python 
 def calcularganador(self, data):
@@ -47,8 +80,14 @@ def calcularganador(self, data):
         for candidato in votosxcandidato:
             return [candidato]
 ```  
-Vemos que se calculaba el ganador en una sola función. Decidimos dividirlo en funciones más pequeñas para ordener el código y hacerlo más claro. El resultado fue el siguiente:  
+Vemos que se calculaba el ganador en una sola función. Decidimos dividirlo en funciones más pequeñas para ordener el código y hacerlo más claro. Todo ello fu englobado en una función llamada calcular_ganador(). El resultado fue el siguiente:  
 ```python 
+def calcular_ganador(self, data):
+    votosxcandidato = self.contar_votos(data)
+    self.mostrar_ganador(votosxcandidato)
+    ganador = self.obtener_ganador(votosxcandidato)
+    print(ganador)
+
 def contar_votos(self, data):
     votosxcandidato = {}
     for fila in data:
@@ -61,6 +100,7 @@ def contar_votos(self, data):
 
 def mostrar_ganador(self, votosxcandidato):
     for candidato, votos in votosxcandidato.items():
+        if
         print('Candidato: ' + candidato + ', Votos válidos: ' + str(votos))
 
 def obtener_ganador(self, votosxcandidato):
@@ -68,4 +108,4 @@ def obtener_ganador(self, votosxcandidato):
     return [ganador]
 ```  
 
-### * Eliminar código duplicado  
+### Eliminar código duplicado  
