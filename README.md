@@ -217,3 +217,9 @@ def contar_votos(self, data):
 ```  
 
 De esta manera la validación de que el DNI y el voto sean válidos se hace en la misma línea.
+
+## Tests  
+Para correr el test, ejecutar el siguiente comando:  
+```python
+python3 test.py
+```  
