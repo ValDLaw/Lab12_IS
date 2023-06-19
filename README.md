@@ -80,32 +80,61 @@ def calcularganador(self, data):
         for candidato in votosxcandidato:
             return [candidato]
 ```  
-Vemos que se calculaba el ganador en una sola función. Decidimos dividirlo en funciones más pequeñas para ordener el código y hacerlo más claro. Todo ello fu englobado en una función llamada calcular_ganador(). El resultado fue el siguiente:  
+Vemos que se calculaba el ganador en una sola función. Decidimos dividirlo en funciones más pequeñas para ordener el código y hacerlo más claro. Todo ello fue englobado en una función llamada calcular_ganador(). El resultado fue el siguiente:  
 ```python 
 def calcular_ganador(self, data):
-    votosxcandidato = self.contar_votos(data)
-    self.mostrar_ganador(votosxcandidato)
-    ganador = self.obtener_ganador(votosxcandidato)
-    print(ganador)
+        votosxcandidato, total_votos = self.contar_votos(data)
+        ganador = self.obtener_ganador(votosxcandidato, total_votos)
+        if ganador:
+            print('GANADOR')
+            print('Candidato: ' + ganador[0])
+        else:
+            candidatos_2vuelta = self.obtener_ganadores(votosxcandidato)
+            print('Candidato: ' + candidatos_2vuelta[0][0] + ', Votos válidos: ' + str(candidatos_2vuelta[0][1]))
+            print('Candidato: ' + candidatos_2vuelta[1][0] + ', Votos válidos: ' + str(candidatos_2vuelta[1][1]))
+            print('GANADOR')
+            print('Candidato: ' + candidatos_2vuelta[0][0])
 
 def contar_votos(self, data):
-    votosxcandidato = {}
-    for fila in data:
-        candidato = fila[4]
-        if candidato not in votosxcandidato:
-            votosxcandidato[candidato] = 0
-        if fila[5] == '1':
-            votosxcandidato[candidato] += 1
-    return votosxcandidato
+        votosxcandidato = {}
+        total_votos = 0
+        for fila in data:
+            candidato = fila[4]
+            if candidato not in votosxcandidato:
+                votosxcandidato[candidato] = 0
+            if fila[5] == '1':
+                votosxcandidato[candidato] += 1
+                total_votos += 1
+        return votosxcandidato, total_votos
 
-def mostrar_ganador(self, votosxcandidato):
-    for candidato, votos in votosxcandidato.items():
-        if
-        print('Candidato: ' + candidato + ', Votos válidos: ' + str(votos))
+    def obtener_ganador(self, votosxcandidato, total_votos):
+        for candidato, votos in votosxcandidato.items():
+            porcentaje = (votos / total_votos) * 100
+            if porcentaje > 50:
+                return [candidato]
+        return None
 
-def obtener_ganador(self, votosxcandidato):
-    ganador = max(votosxcandidato, key=votosxcandidato.get)
-    return [ganador]
+    def obtener_ganadores(self, votosxcandidato):
+        sorted_candidatos = sorted(votosxcandidato.items(), key=lambda x: x[1], reverse=True)
+        candidatos_2vuelta = [sorted_candidatos[0],sorted_candidatos[1]]
+        return candidatos_2vuelta
 ```  
 
 ### Eliminar código duplicado  
+Teníamos la siguiente lógica previamente. Eran dos fors que iteraban al diccionario votosxcandidato:  
+
+```python 
+for candidato in votosxcandidato:
+    print('candidato: ' + candidato + ' votos validos: ' + str(votosxcandidato[candidato]))
+for candidato in votosxcandidato:
+    return [candidato]
+```
+
+Lo que hicimos para no realizar este for dos veces innecesariamente fue lo siguiente:  
+```python
+sorted_candidatos = sorted(votosxcandidato.items(), key=lambda x: x[1], reverse=True)
+        candidatos_2vuelta = [sorted_candidatos[0],sorted_candidatos[1]]
+        return candidatos_2vuelta
+```  
+
+Calculamos únicamente lo que nos piden, que es en caso haya segunda vuelta, el que haya aperecido primero en el archivo, y lo almaceno en variables.
